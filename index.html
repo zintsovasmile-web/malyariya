@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Малярия — исследование игры на деревьях</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap');
+:root{--bg:#f5f3ed;--ink:#242b38;--muted:#687282;--a:#7259ca;--b:#edac62;--line:#dddde5;--white:#fff;--win:#357968}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#ede5ff 0,transparent 40%),radial-gradient(ellipse at 95% 70%,#ffe9d2 0,transparent 35%),var(--bg);font-family:Montserrat,Arial,sans-serif;color:var(--ink)}button,input,textarea,select{font:inherit}button{cursor:pointer}h1,h2,h3{font-family:Unbounded,sans-serif;letter-spacing:-.03em}h1{font-size:clamp(25px,3vw,38px);margin:0 0 9px}h2{font-size:16px;margin:0 0 15px}h3{font-size:13px;margin:0 0 9px}.wrap{max-width:1300px;margin:auto;padding:30px 24px 60px}.top{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:25px}.subtitle{color:var(--muted);line-height:1.6;font-size:14px}.pill{border-radius:30px;background:#e9e1ff;color:#5d4ab1;padding:9px 15px;font-size:12px;font-weight:700}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(310px,1fr);gap:20px}.panel{background:rgba(255,255,255,.86);padding:23px;border-radius:22px;box-shadow:0 8px 36px #2832480b}.full{grid-column:1/-1}.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.btn{background:#f2effb;color:var(--ink);border:0;border-radius:12px;padding:11px 15px;font-weight:700;font-size:12px}.btn.primary{background:var(--a);color:#fff}.btn.orange{background:#ffe7cd}.btn:disabled{opacity:.45;cursor:not-allowed}select,input[type=text]{background:#f8f7fb;border:1px solid #e3e0ec;border-radius:10px;padding:10px 12px;max-width:100%}label.small{font-size:12px;color:var(--muted);font-weight:700;display:block;margin-bottom:6px}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:9px;max-height:232px;overflow:auto;margin-top:13px;padding:2px}.choice{border:2px solid transparent;background:#f5f4f9;border-radius:14px;padding:6px;min-height:100px;text-align:center}.choice.active{border-color:var(--a);background:#f1ecff}.choice svg{display:block;width:100%;height:72px}.choice span{font-size:10px;color:var(--muted)}.boardbox{background:#f8f7fc;border-radius:20px;margin:17px 0;padding:12px;position:relative}.board{width:100%;height:auto;min-height:250px;max-height:460px;display:block;touch-action:manipulation}.edge{stroke:#b7b0cc;stroke-width:3;stroke-linecap:round}.vertex{stroke:white;stroke-width:3;cursor:pointer;transition:filter .12s}.vertex:hover{filter:brightness(1.1)}.vertex.legal{fill:#ebe5ff;stroke:#7f69d1}.vertex.a{fill:#8064d3}.vertex.b{fill:#f1b165}.vertex.blocked{fill:#d9d9df;cursor:not-allowed}.number{font-family:Montserrat;font-size:13px;font-weight:700;pointer-events:none;fill:#3d3862}.number.colored{fill:white}.legend{display:flex;flex-wrap:wrap;gap:13px;font-size:11px;color:var(--muted)}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin-right:5px}.status{background:#f1eefb;border-radius:14px;padding:14px 16px;margin:13px 0;font-size:14px;font-weight:700;line-height:1.6}.status.won{background:#e5f3ef;color:#27624f}.meta{font-size:12px;color:var(--muted);line-height:1.7}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin-bottom:13px}textarea{width:100%;min-height:122px;resize:vertical;border:1px solid #e0dce8;background:#fbfaff;border-radius:14px;padding:14px;line-height:1.6;font-size:13px;color:var(--ink)}.hint{font-size:11px;color:var(--muted);margin-top:5px}.record{border-bottom:1px solid #ece8ed;padding:12px 0}.record:last-child{border:0}.saved-graph{display:block;width:100%;max-width:390px;height:auto;border-radius:12px;background:#faf9fe;margin:9px 0}.saved-graph text{font-family:Montserrat,Arial,sans-serif}.game-actions{display:flex;gap:8px;flex-wrap:wrap;margin:7px 0}.recordtop{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;font-size:12px}.record p{white-space:pre-wrap;font-size:12px;line-height:1.55;margin:8px 0;color:#465060}.tiny{font-size:10px;color:var(--muted)}.tag{border-radius:20px;background:#ece7fb;padding:5px 8px;font-size:10px}.scroll{max-height:440px;overflow-y:auto}.notice{padding:12px 14px;border-radius:14px;background:#fff5e7;font-size:12px;color:#73573f;line-height:1.6}.empty{font-size:12px;color:var(--muted);line-height:1.6}.statistics{font-size:12px;line-height:1.7}.steps{display:flex;flex-wrap:wrap;gap:7px}.steps span{font-size:11px;padding:5px 9px;border-radius:10px;background:#f2effa}.divider{border-top:1px solid #e9e6ee;margin:18px 0}.footer{margin-top:22px;font-size:11px;color:var(--muted)}@media(max-width:800px){.layout{grid-template-columns:1fr}.top{display:block}.top .pill{display:inline-block;margin-top:14px}.wrap{padding:18px 12px}.panel{padding:17px}.board{min-height:200px}}
+
+/* Compact classroom layout: the entire workspace fits in one desktop viewport. */
+.task{background:#fff9ed;border-radius:14px;padding:10px 15px;margin:-12px 0 13px;font-size:12px;line-height:1.5;color:#453d45}
+.task strong{color:#5d4ab1}
+@media (min-width:900px) and (min-height:650px){
+ html,body{height:100%;overflow:hidden}
+ .wrap{height:100dvh;max-width:1550px;padding:12px 20px 10px;display:flex;flex-direction:column;min-height:0}
+ .top{margin-bottom:10px;flex:none}.top h1{font-size:25px;margin-bottom:3px}.subtitle{font-size:11px;line-height:1.25}.pill{padding:7px 10px;font-size:10px}
+ .layout{flex:1;min-height:0;grid-template-columns:minmax(0,1.45fr) minmax(335px,1fr);grid-template-rows:minmax(0,1.15fr) minmax(0,.85fr);gap:10px}
+ .layout>.panel:first-child{grid-column:1;grid-row:1/span 2}
+ .layout>.panel:nth-child(2){grid-column:2;grid-row:1}
+ .layout>.panel:nth-child(3){grid-column:2;grid-row:2}
+ .panel{min-height:0;overflow-y:auto;padding:14px 16px;border-radius:16px}
+ .panel h2{font-size:13px;margin-bottom:9px}.panel .divider{margin:10px 0}
+ .controls{gap:6px}.btn{padding:8px 10px;font-size:10px;border-radius:9px}select,input[type=text]{padding:7px 9px;font-size:11px}.small{margin-bottom:3px!important}
+ .gallery{display:flex;overflow-x:auto;overflow-y:hidden;height:91px;max-height:91px;gap:6px;margin-top:7px;flex:none}
+ .gallery .choice{min-width:91px;width:91px;min-height:81px;height:81px;flex-shrink:0;padding:4px}.choice svg{height:55px}
+ .boardbox{margin:9px 0;padding:4px 8px}.board{min-height:0;max-height:none;height:clamp(170px,28vh,290px)}
+ .legend{gap:9px;font-size:10px}.status{padding:8px 12px;margin:8px 0;font-size:12px}
+ .meta{font-size:10px;line-height:1.45}.notice{padding:8px 10px;font-size:10px}.field{margin-bottom:8px!important}textarea{min-height:65px;height:clamp(65px,11vh,120px);font-size:11px;padding:9px;line-height:1.4}
+ .record{padding:7px 0}.record p{margin:5px 0;font-size:11px}.scroll{max-height:none;overflow:auto}.footer{margin-top:5px;font-size:9px;line-height:1.2;flex:none}
+ .steps span{padding:3px 6px;font-size:9px}
+}
+@media (max-width:899px), (max-height:649px){.task{margin:0 0 12px}}
+</style></head><body><main class="wrap"><div class="top"><div><h1>Малярия <span style="color:#8b75ce">●</span></h1><div class="subtitle">Исследовательская лаборатория: играем на деревьях, проверяем гипотезы, собираем результаты.</div></div><span class="pill">ПОЛНЫЙ ПЕРЕБОР · 2–9 ВЕРШИН</span></div><div class="task"><strong>Задача «Малярия».</strong> Двое по очереди красят вершины дерева. Рядом с уже покрашенной вершиной вершины красить нельзя. Проигрывает тот, кто не может сделать очередной ход. <strong>Опишите все деревья, на которых выигрывает первый игрок.</strong></div><div class="layout"><section class="panel"><h2>1. Выберите дерево</h2><div class="controls"><div><label class="small" for="size">Число вершин</label><select id="size"></select></div><div><label class="small" for="treeSelect">Дерево</label><select id="treeSelect"></select></div><button class="btn" id="prev">← Предыдущее</button><button class="btn" id="next">Следующее →</button></div><div class="meta" id="treeCount" style="margin-top:10px"></div><div id="gallery" class="gallery"></div><div class="divider"></div><h2>2. Играйте</h2><div class="meta">Игроки по очереди красят вершины. Нельзя красить вершину, соседнюю с уже покрашенной. Кто не может сделать ход — проигрывает.</div><div class="boardbox"><svg class="board" id="board" viewBox="0 0 600 385" aria-label="Дерево, нажимайте на доступные вершины"></svg></div><div class="legend"><span><i class="dot" style="background:#ebe5ff;border:1px solid #8064d3"></i> Можно выбрать</span><span><i class="dot" style="background:#8064d3"></i> Игрок 1</span><span><i class="dot" style="background:#f1b165"></i> Игрок 2</span><span><i class="dot" style="background:#d9d9df"></i> Недоступна</span></div><div class="status" id="status"></div><div class="controls"><button class="btn" id="undo">↶ Отменить ход</button><button class="btn" id="restart">Начать заново</button><button class="btn primary" id="saveGame">Сохранить результат</button></div><div style="margin-top:13px" class="meta">Ходы партии:</div><div id="moves" class="steps" style="margin-top:7px"></div></section><aside class="panel"><h2>3. Исследовательский дневник</h2><div class="notice">Записи сохраняются автоматически в этом браузере. Для сохранения между устройствами используйте экспорт.</div><div class="field" style="margin-top:15px"><label class="small">Название опыта / гипотеза</label><input type="text" id="noteTitle" style="width:100%" placeholder="Например: на цепочках выигрывает…"></div><div class="field"><label class="small">Мысли, наблюдения и объяснения</label><textarea id="noteBody" placeholder="Что замечаем? Какие деревья похожи? Какую закономерность хочется проверить?"></textarea><div class="hint" id="autosave">Черновик сохраняется автоматически</div></div><div class="controls"><button class="btn primary" id="saveNote">Добавить запись в дневник</button><button class="btn" id="clearDraft">Очистить поля</button></div><div class="divider"></div><h2>Дневник наблюдений <span id="noteCounter"></span></h2><div class="scroll" id="notes"></div></aside><section class="panel full"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center"><h2 style="margin:0">4. Журнал партий и исследование</h2><div class="controls"><button class="btn" id="exportJson">Экспорт всех данных · JSON</button><button class="btn" id="exportCsv">Журнал партий · CSV</button><button class="btn" id="importBtn">Импорт данных</button><input type="file" id="importFile" accept="application/json,.json" hidden></div></div><div class="meta" id="stats" style="margin:15px 0"></div><div id="games" class="scroll"></div></section></div><div class="footer">Данные хранятся локально в браузере (localStorage). Если открыть файл в другом браузере, на другом устройстве или в приватном режиме, записи могут быть недоступны. Для надёжности регулярно экспортируйте данные в JSON.</div></main><script>
+'use strict';
+const KEY='malaria_lab_v1'; const DEFAULT={notes:[],games:[],draft:{title:'',body:''}};
+function load(){try{let x=JSON.parse(localStorage.getItem(KEY));return x&&Array.isArray(x.notes)&&Array.isArray(x.games)?{...DEFAULT,...x}:structuredClone(DEFAULT)}catch(e){return structuredClone(DEFAULT)}}
+let db=load(); function persist(){try{localStorage.setItem(KEY,JSON.stringify(db));return true}catch(e){alert('Не удалось сохранить данные в этом браузере. Пожалуйста, экспортируйте дневник.');return false}}
+const $=id=>document.getElementById(id);const el=(tag,attr={},txt='')=>{let e=document.createElement(tag);Object.entries(attr).forEach(([k,v])=>e.setAttribute(k,v));e.textContent=txt;return e};
+// All non-isomorphic unlabeled trees by recursively attaching a leaf and canonically deduplicating.
+function canonical(adj){let n=adj.length;function rooted(v,parent){let children=adj[v].filter(x=>x!==parent).map(x=>rooted(x,v)).sort();return '('+children.join('')+')'}let codes=adj.map((_,i)=>rooted(i,-1));return codes.sort()[0]}
+function allTrees(){let groups={2:[[[1],[0]]]};for(let n=3;n<=9;n++){let seen=new Map();for(let prev of groups[n-1])for(let attach=0;attach<prev.length;attach++){let adj=prev.map(a=>a.slice());adj.push([attach]);adj[attach].push(n-1);let code=canonical(adj);if(!seen.has(code))seen.set(code,adj)}groups[n]=Array.from(seen.entries()).sort((a,b)=>a[0].localeCompare(b[0])).map(x=>x[1])}return groups}
+const trees=allTrees(); let n=2,idx=0,history=[],savedSignature=null;
+function positions(adj){
+let count=adj.length;if(count===1)return [[300,192]];if(count===2)return [[225,192],[375,192]];
+// Planar rooted-tree layout: choose a center as root and place each subtree into its own horizontal interval.
+// For trees this guarantees that edges do not cross.
+function subtreeCode(v,parent){let parts=adj[v].filter(x=>x!==parent).map(x=>subtreeCode(x,v)).sort();return '('+parts.join('')+')'}
+function chooseRoot(){
+  function ecc(start){
+    let dist=Array(count).fill(-1),queue=[start];dist[start]=0;
+    for(let qi=0;qi<queue.length;qi++){let v=queue[qi];for(let w of adj[v])if(dist[w]<0){dist[w]=dist[v]+1;queue.push(w)}}
+    return Math.max(...dist);
+  }
+  let best=Array.from({length:count},(_,i)=>i).sort((a,b)=>{
+    let ea=ecc(a),eb=ecc(b);if(ea!==eb)return ea-eb;
+    let ca=subtreeCode(a,-1),cb=subtreeCode(b,-1);if(ca!==cb)return ca.localeCompare(cb);
+    return a-b;
+  });
+  return best[0];
+}
+let root=chooseRoot();
+const xIndex=Array(count).fill(0),depth=Array(count).fill(0),order=[];
+function build(v,parent,d){
+  depth[v]=d;
+  let children=adj[v].filter(x=>x!==parent).map(x=>({v:x,code:subtreeCode(x,v)})).sort((a,b)=>a.code.localeCompare(b.code)||a.v-b.v);
+  if(!children.length){order.push(v);xIndex[v]=order.length-1;return {leaves:1};}
+  let leaves=0;for(let child of children){let info=build(child.v,v,d+1);leaves+=info.leaves;}
+  let xs=children.map(child=>xIndex[child.v]);xIndex[v]=xs.reduce((s,x)=>s+x,0)/xs.length;
+  return {leaves};
+}
+build(root,-1,0);
+let maxDepth=Math.max(...depth),maxX=Math.max(...xIndex),minX=Math.min(...xIndex);
+let xSpan=Math.max(1,maxX-minX),ySpan=Math.max(1,maxDepth);
+let left=56,right=544,top=50,bottom=334;
+// If the tree is very shallow, use more vertical space aesthetically.
+if(maxDepth<=2){top=70;bottom=314}
+return Array.from({length:count},(_,i)=>[
+  left+((xIndex[i]-minX)/xSpan)*(right-left),
+  top+(depth[i]/ySpan)*(bottom-top)
+]);}
+const layouts={};function coords(adj){let k=canonical(adj);return layouts[k]??(layouts[k]=positions(adj))}
+function svgNode(tag,attrs){let e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(let[k,v]of Object.entries(attrs))e.setAttribute(k,v);return e}
+function draw(svg,adj,mini=false){svg.replaceChildren();let points=coords(adj),colors=Array(adj.length).fill(0);if(!mini)for(let h of history)colors[h.v]=h.p;
+let blocked=new Set();for(let i=0;i<adj.length;i++)if(colors[i]){blocked.add(i);adj[i].forEach(j=>blocked.add(j))}let scale=mini?1:1;
+for(let i=0;i<adj.length;i++)for(let j of adj[i])if(i<j){let line=svgNode('line',{x1:points[i][0],y1:points[i][1],x2:points[j][0],y2:points[j][1],class:'edge'});svg.append(line)}
+for(let i=0;i<adj.length;i++){let cls=colors[i]?(colors[i]===1?'a':'b'):(blocked.has(i)?'blocked':'legal');let node=svgNode('circle',{cx:points[i][0],cy:points[i][1],r:mini?19:22,class:'vertex '+cls});if(!mini&&!blocked.has(i))node.addEventListener('click',()=>play(i));svg.append(node);let tx=svgNode('text',{x:points[i][0],y:points[i][1]+5,'text-anchor':'middle',class:'number '+(colors[i]?'colored':'')});tx.textContent=String(i+1);svg.append(tx)}
+}
+function isOver(){let adj=trees[n][idx],taken=new Set();for(let h of history){taken.add(h.v);adj[h.v].forEach(j=>taken.add(j))}return taken.size===n}
+function status(){let turn=history.length%2+1,over=isOver();$('status').className='status'+(over?' won':'');$('status').textContent=over?'Партия завершена! Победил игрок '+(3-turn)+'. Игрок '+turn+' не может сделать ход.':'Ход игрока '+turn+'. Нажмите на доступную вершину.';$('undo').disabled=!history.length;$('saveGame').disabled=!over;$('moves').replaceChildren(...history.map((h,i)=>el('span',{},(i+1)+'. Игрок '+h.p+' → вершина '+(h.v+1))))}
+function renderBoard(){draw($('board'),trees[n][idx]);status()}
+function setTree(nn,ii){n=nn;idx=ii;history=[];savedSignature=null;$('size').value=String(n);populateSelect();$('treeSelect').value=String(idx);drawGallery();renderBoard();}
+function populateSelect(){$('treeSelect').replaceChildren(...trees[n].map((_,i)=>el('option',{value:i},'№ '+(i+1))));$('treeCount').textContent='Все неизоморфные деревья на '+n+' вершинах: '+trees[n].length+'. Выбрано дерево № '+(idx+1)+'.'}
+function drawGallery(){let box=$('gallery');box.replaceChildren();trees[n].forEach((adj,i)=>{let b=el('button',{class:'choice'+(i===idx?' active':''),'aria-label':'Выбрать дерево '+(i+1)});let s=svgNode('svg',{viewBox:'0 0 600 385'});draw(s,adj,true);b.append(s,el('span',{},'Дерево '+(i+1)));b.addEventListener('click',()=>setTree(n,i));box.append(b)});$('treeCount').textContent='Все неизоморфные деревья на '+n+' вершинах: '+trees[n].length+'. Выбрано дерево № '+(idx+1)+'.'}
+function play(v){if(isOver())return;let adj=trees[n][idx];for(let h of history)if(h.v===v||adj[h.v].includes(v))return;history.push({p:history.length%2+1,v});savedSignature=null;renderBoard()}
+$('size').replaceChildren(...Array.from({length:8},(_,i)=>el('option',{value:i+2},String(i+2)+' вершин')));$('size').addEventListener('change',e=>setTree(+e.target.value,0));$('treeSelect').addEventListener('change',e=>setTree(n,+e.target.value));$('prev').addEventListener('click',()=>setTree(n,(idx-1+trees[n].length)%trees[n].length));$('next').addEventListener('click',()=>setTree(n,(idx+1)%trees[n].length));$('undo').addEventListener('click',()=>{history.pop();savedSignature=null;renderBoard()});$('restart').addEventListener('click',()=>{history=[];savedSignature=null;renderBoard()});
+function stamp(){return new Date().toLocaleString('ru-RU')}
+$('saveGame').addEventListener('click',()=>{if(!isOver())return;let signature=n+'-'+idx+'-'+history.map(x=>x.v).join(',');if(signature===savedSignature){alert('Этот результат уже сохранён.');return}let win=history.length%2===1?1:2;db.games.unshift({id:Date.now()+'_'+Math.random().toString(36).slice(2),date:stamp(),n,tree:idx+1,edges:trees[n][idx].flatMap((a,i)=>a.filter(j=>j>i).map(j=>[i+1,j+1])),moves:history.map(x=>({player:x.p,vertex:x.v+1})),positions:coords(trees[n][idx]).map(p=>p.slice()),winner:win});if(persist()){savedSignature=signature;renderGames();alert('Результат партии сохранён в журнале.')}});
+$('noteTitle').value=db.draft?.title||'';$('noteBody').value=db.draft?.body||'';function draft(){db.draft={title:$('noteTitle').value,body:$('noteBody').value};persist();$('autosave').textContent='Черновик сохранён · '+stamp()}$('noteTitle').addEventListener('input',draft);$('noteBody').addEventListener('input',draft);
+$('clearDraft').addEventListener('click',()=>{$('noteTitle').value='';$('noteBody').value='';draft()});$('saveNote').addEventListener('click',()=>{let title=$('noteTitle').value.trim(),body=$('noteBody').value.trim();if(!title&&!body){alert('Напишите наблюдение или гипотезу.');return}db.notes.unshift({id:Date.now()+'_'+Math.random().toString(36).slice(2),date:stamp(),n,tree:idx+1,title,body});if(persist()){$('noteTitle').value='';$('noteBody').value='';draft();renderNotes()}});
+function renderNotes(){let target=$('notes');target.replaceChildren();$('noteCounter').textContent='('+db.notes.length+')';if(!db.notes.length){target.append(el('p',{class:'empty'},'Пока нет записей. Наблюдения о деревьях и стратегиях появятся здесь.'));return}db.notes.forEach(note=>{let item=el('div',{class:'record'}),head=el('div',{class:'recordtop'}),label=el('strong',{},note.title||'Наблюдение');let del=el('button',{class:'btn'},'Удалить');del.addEventListener('click',()=>{if(confirm('Удалить эту запись?')){db.notes=db.notes.filter(x=>x.id!==note.id);persist();renderNotes()}});head.append(label,del);item.append(head,el('div',{class:'tiny'},note.date+' · '+note.n+' вершин · дерево № '+note.tree),el('p',{},note.body));target.append(item)})}
+function savedGraph(g){
+  // Construct the recorded graph from its OWN edges and immutable vertex coordinates.
+  // This also renders records imported from older JSON backups.
+  const adj=Array.from({length:g.n},()=>[]);
+  for(const [aa,bb] of g.edges){let a=aa-1,b=bb-1;if(a>=0&&b>=0&&a<g.n&&b<g.n){adj[a].push(b);adj[b].push(a)}}
+  const points=positions(adj);
+  const firstMove=Array(g.n).fill(-1),players=Array(g.n).fill(0);
+  (g.moves||[]).forEach((m,i)=>{const v=m.vertex-1;if(v>=0&&v<g.n){firstMove[v]=i+1;players[v]=m.player}});
+  let blocked=new Set();for(let i=0;i<g.n;i++)if(players[i]){blocked.add(i);for(let j of adj[i])blocked.add(j)}
+  const svg=svgNode('svg',{viewBox:'0 0 600 385',class:'saved-graph',role:'img','aria-label':'Сохранённое дерево: фиолетовые ходы первого игрока, оранжевые второго, числа внутри окрашенных вершин — порядок ходов'});
+  svg.append(svgNode('rect',{width:600,height:385,rx:16,fill:'#faf9fe'}));
+  for(let i=0;i<g.n;i++)for(let j of adj[i])if(i<j)svg.append(svgNode('line',{x1:points[i][0],y1:points[i][1],x2:points[j][0],y2:points[j][1],stroke:'#b7b0cc','stroke-width':3,'stroke-linecap':'round'}));
+  for(let i=0;i<g.n;i++){
+    const fill=players[i]===1?'#8064d3':players[i]===2?'#f1b165':blocked.has(i)?'#d9d9df':'#ebe5ff';
+    svg.append(svgNode('circle',{cx:points[i][0],cy:points[i][1],r:23,fill,stroke:'#ffffff','stroke-width':3}));
+    let t=svgNode('text',{x:points[i][0],y:points[i][1]+5,'text-anchor':'middle','font-size':15,'font-weight':700,fill:players[i]?'#ffffff':'#3d3862'});t.textContent=firstMove[i]>0?String(firstMove[i]):String(i+1);svg.append(t);
+    // Small original vertex number outside each colored circle: both order and position remain visible.
+    if(players[i]){let tag=svgNode('text',{x:points[i][0]+25,y:points[i][1]-16,'font-size':12,'font-weight':700,fill:'#4e4b62'});tag.textContent='в'+(i+1);svg.append(tag)}
+  }
+  const legend=svgNode('text',{x:16,y:370,'font-size':12,fill:'#5d5871'});legend.textContent='Фиолетовый — игрок 1 · оранжевый — игрок 2 · внутри кружка — номер хода';svg.append(legend);
+  return svg;
+}
+function renderGames(){let target=$('games');target.replaceChildren();let counts={1:0,2:0};db.games.forEach(g=>{counts[g.winner]=(counts[g.winner]||0)+1});$('stats').textContent='Сохранено партий: '+db.games.length+' · Побед игрока 1: '+counts[1]+' · Побед игрока 2: '+counts[2]+' · Записей: '+db.notes.length;if(!db.games.length){target.append(el('p',{class:'empty'},'Завершите партию и нажмите «Сохранить результат». Здесь появится цветной рисунок дерева с порядком ходов и победителем.'));return}db.games.forEach(g=>{let item=el('div',{class:'record'}),row=el('div',{class:'recordtop'});row.append(el('strong',{},g.n+' вершин · дерево № '+g.tree),el('span',{class:'tag'},'Победил игрок '+g.winner));let del=el('button',{class:'btn'},'Удалить');del.addEventListener('click',()=>{if(confirm('Удалить эту партию из журнала?')){db.games=db.games.filter(x=>x.id!==g.id);persist();renderGames()}});row.append(del);
+  let image=savedGraph(g),actions=el('div',{class:'game-actions'}),savePic=el('button',{class:'btn'},'↓ Скачать картинку SVG');
+  savePic.addEventListener('click',()=>{let graphic=image.cloneNode(true);graphic.setAttribute('xmlns','http://www.w3.org/2000/svg');download(new XMLSerializer().serializeToString(graphic),'malyariya-'+g.n+'-vershin-derevo-'+g.tree+'-'+String(g.id).replace(/[^\w-]/g,'')+'.svg','image/svg+xml;charset=utf-8')});actions.append(savePic,del);
+  item.append(row,el('div',{class:'tiny'},g.date),image,actions,el('p',{},g.moves.map((m,i)=>(i+1)+': игрок '+m.player+' → вершина '+m.vertex).join('  ·  ')));target.append(item)})}
+function download(data,name,type){let blob=new Blob([data],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+$('exportJson').addEventListener('click',()=>download(JSON.stringify({format:'malaria-lab',version:1,exported:new Date().toISOString(),...db},null,2),'malyariya-issledovanie.json','application/json;charset=utf-8'));
+$('exportCsv').addEventListener('click',()=>{let rows=[['Дата','Вершин','Дерево','Победитель','Ходы','Рёбра'],...db.games.map(g=>[g.date,g.n,g.tree,g.winner,g.moves.map(m=>m.player+':'+m.vertex).join(' / '),g.edges.map(e=>e.join('-')).join(' / ')])];let csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(';')).join('\r\n');download(csv,'malyariya-partii.csv','text/csv;charset=utf-8')});
+$('importBtn').addEventListener('click',()=>$('importFile').click());$('importFile').addEventListener('change',async e=>{let file=e.target.files[0];if(!file)return;try{let x=JSON.parse(await file.text());if(x.format!=='malaria-lab'||!Array.isArray(x.notes)||!Array.isArray(x.games))throw Error('Неверный формат');if(!confirm('Импорт заменит текущие записи и партии. Продолжить?'))return;db={notes:x.notes,games:x.games,draft:x.draft||{title:'',body:''}};persist();$('noteTitle').value=db.draft.title||'';$('noteBody').value=db.draft.body||'';renderNotes();renderGames()}catch(err){alert('Невозможно импортировать: '+err.message)}finally{e.target.value=''}});
+setTree(2,0);renderNotes();renderGames();
+</script></body></html>
